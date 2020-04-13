@@ -4,8 +4,8 @@ const usersController = require('./controllers/users');
 const cors = require('cors')
 
 //Middleware
-app.use(express.json());
 app.use(cors());
+app.use(express.json());
 
 //Controllers
 app.use('/api/users', usersController);
