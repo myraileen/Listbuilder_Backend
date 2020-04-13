@@ -8,8 +8,7 @@ const mongoURI = 'mongodb://localhost/listbuilder'
 mongoose
   .connect(mongoURI, { 
     useNewUrlParser: true, 
-    useUnifiedTopology: true,
-    useFindAndModify: false 
+    useUnifiedTopology: true
   })
   .then(instance => console.log(`Connected to db: ${instance.connections[0].name}`))
   .catch(error => console.log('Connection failed!', error))
