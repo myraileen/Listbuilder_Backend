@@ -9,5 +9,5 @@ Link to [ERD](https://dbdiagram.io/d/5e924af039d18f5553fd74eb)
 ```
 $ npm init -y
 $ npm install express mongoose
-$
+$ npm install cors
 ```

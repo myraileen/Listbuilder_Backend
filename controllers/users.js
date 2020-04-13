@@ -5,8 +5,8 @@ const User = require('../models/User')
 
 // GET ALL USERS
 router.get('/', (req, res) => {
-  res.send('Users GET route is working!')
-})
+    User.find().then(users => res.json(users))
+  })	
 
 // GET USER BY ID	
 router.get('/:id', (req, res) => {
