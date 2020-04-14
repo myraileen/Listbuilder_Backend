@@ -73,7 +73,7 @@ router.delete('/delete-list/:userId/:listId',(req, res) => {
   })
 
   User.findOne({_id: req.params.userId}).then((userRemoveListRef, i, arr) => {
-      var n = eventRemoveListRef.indexOf(userID)
+      var n = userRemoveListRef.indexOf(userID)
       userRemoveListRef.lists.splice(n,1)   
       userRemoveListRef.save() 
       console.log(userRemoveListRef)
@@ -116,7 +116,7 @@ router.delete('/delete-item/:userId/:itemId',(req, res) => {
   })
 
   User.findOne({_id: req.params.userId}).then((userRemoveItemRef, i, arr) => {
-      var n = eventRemoveItemRef.indexOf(userID)
+      var n = userRemoveItemRef.indexOf(userID)
       userRemoveItemRef.items.splice(n,1)   
       userRemoveItemRef.save() 
       console.log(userRemoveItemRef)
