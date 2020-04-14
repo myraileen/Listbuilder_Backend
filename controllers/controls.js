@@ -74,7 +74,7 @@ router.delete('/delete-list/:userId/:listId',(req, res) => {
 
   User.findOne({_id: req.params.userId}).then((userRemoveListRef, i, arr) => {
       var n = eventRemoveListRef.indexOf(userID)
-      userRemoveListRef.items.splice(n,1)   
+      userRemoveListRef.lists.splice(n,1)   
       userRemoveListRef.save() 
       console.log(userRemoveListRef)
   })
