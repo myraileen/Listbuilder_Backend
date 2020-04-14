@@ -9,15 +9,22 @@ const Item = require('../models/Item')
 router.get('/users', (req, res) => {
     User.find({})
     .populate('items')
-    .populate('lists')
+    .populate ({
+        path: 'lists',
+        populate: { path: 'items' }
+      })
     .then(users => res.json(users))
   })	
+
 
 // GET USER BY ID	
 router.get('/users/:id', (req, res) => {
     User.findById(req.params.id)
     .populate('items')
-    .populate('lists')
+    .populate ({
+        path: 'lists',
+        populate: { path: 'items' }
+      })
     .then(user => res.json(user))
   })
 
@@ -49,6 +56,7 @@ router.get('/lists', (req, res) => {
 // GET LIST BY ID	
 router.get('/lists/:id', (req, res) => {
   List.findById(req.params.id)
+  .populate('items')
   .then(list => res.json(list))
 })
 
@@ -138,14 +146,11 @@ router.put('/new-item',(req, res) => {
   updateUser()
 })
 
-// Add item to a list (UPDATE list's item array)
+// Add NEW item to a list (UPDATE list's item array AND user's item array)
 router.put('/new-list-item',(req, res) => {
-  console.log(req)
-  console.log('req params', req.params.listId)
-
-  const listId = req.body.user._id
+  const userId = req.body.user._id
+  const listId = req.body.list._id
   let newItem = {}
-
       function populateItem() {
       Item.create(
           req.body.item
@@ -157,10 +162,34 @@ router.put('/new-list-item',(req, res) => {
   }
   async function updateList() {
       await populateItem()
-      User.findOne({_id: listId}).then(updatedList => {
+      List.findOne({_id: listId}).then(updatedList => {
           updatedList.items.push(newItem._id)
           updatedList.save()
-              console.log('user', updatedList) 
+      })    
+  }
+  updateList()
+
+  async function updateUser() {
+    await populateItem()
+    User.findOne({_id: userId}).then(updatedUser => {
+        updatedUser.items.push(newItem._id)
+        updatedUser.save()
+    })    
+  }
+  updateUser()
+})
+
+// Add EXISTING item to a list (UPDATE list's item array)
+router.put('/add-list-item',(req, res) => {
+  const listId = req.body.list._id
+  const itemId = req.body.item._id
+// this 'hangs' in postman... but transaction works...
+// possibly the connection is hanging open?????
+  function updateList() {
+      List.findOne({_id: listId})
+        .then(updatedList => {
+          updatedList.items.push(itemId)
+          updatedList.save()
       })    
   }
   updateList()
