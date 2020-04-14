@@ -39,6 +39,13 @@ router.delete('/users/:id', (req, res) => {
     .then(deletedUser => res.json(deletedUser))
   })
 
+// GET ALL LISTS
+router.get('/lists', (req, res) => {
+  List.find({})
+  .populate('items')
+  .then(lists => res.json(lists))
+})	
+
 // GET LIST BY ID	
 router.get('/lists/:id', (req, res) => {
   List.findById(req.params.id)
@@ -111,10 +118,32 @@ router.delete('/delete-list/:userId/:listId',(req, res) => {
 
 // Add a new item and attach it to the user UPDATE
 router.put('/new-item',(req, res) => {
-  console.log(req)
-  console.log('req params', req.params.userId)
-
   const userID = req.body.user._id
+  let newItem = {}
+      function populateItem() {
+      Item.create(
+          req.body.item
+      ).then(item => {
+          newItem = item
+          res.json(newItem)
+      })
+  }
+  async function updateUser() {
+      await populateItem()
+      User.findOne({_id: userID}).then(updatedUser => {
+          updatedUser.items.push(newItem._id)
+          updatedUser.save()
+      })    
+  }
+  updateUser()
+})
+
+// Add item to a list (UPDATE list's item array)
+router.put('/new-list-item',(req, res) => {
+  console.log(req)
+  console.log('req params', req.params.listId)
+
+  const listId = req.body.user._id
   let newItem = {}
 
       function populateItem() {
@@ -126,16 +155,15 @@ router.put('/new-item',(req, res) => {
           res.json(newItem)
       })
   }
-  async function updateUser() {
+  async function updateList() {
       await populateItem()
-      User.findOne({_id: userID}).then(updatedUser => {
-          updatedUser.items.push(newItem._id)
-          updatedUser.save()
-              console.log('user', updatedUser) 
+      User.findOne({_id: listId}).then(updatedList => {
+          updatedList.items.push(newItem._id)
+          updatedList.save()
+              console.log('user', updatedList) 
       })    
   }
-  updateUser()
+  updateList()
 })
-
 
 module.exports = router
