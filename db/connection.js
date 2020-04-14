@@ -2,7 +2,14 @@
 const mongoose = require('mongoose')
 
 // set the uri for connecting to our local mongodb
-const mongoURI = 'mongodb://localhost/listbuilder'
+// const mongoURI = 'mongodb://localhost/listbuilder'
+let mongoURI = "";
+
+if (process.env.NODE_ENV === "production") {
+  mongoURI = process.env.MONGODB_URI;
+} else {
+  mongoURI = "mongodb://localhost/listbuilder";
+}
 
 // connect to the database, with the imported mongoose instance
 mongoose
