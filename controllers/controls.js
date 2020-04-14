@@ -16,6 +16,8 @@ router.get('/users', (req, res) => {
 // GET USER BY ID	
 router.get('/users/:id', (req, res) => {
     User.findById(req.params.id)
+    .populate('items')
+    .populate('lists')
     .then(user => res.json(user))
   })
 
@@ -31,11 +33,23 @@ router.put('/users/:id', (req, res) => {
       .then(updatedUser => res.json(updatedUser))
   })
 
-// DELETE A USER
+// DELETE A USER BY ID
 router.delete('/users/:id', (req, res) => {
     User.findByIdAndDelete(req.params.id)
     .then(deletedUser => res.json(deletedUser))
   })
+
+// GET LIST BY ID	
+router.get('/lists/:id', (req, res) => {
+  List.findById(req.params.id)
+  .then(list => res.json(list))
+})
+
+// UPDATE A LIST	
+router.put('/lists/:id', (req, res) => {
+  List.findByIdAndUpdate(req.params.id, req.body, {new: true})
+    .then(updatedList => res.json(updatedList))
+})
 
 // Add a new list and attach it to the user
 router.put('/new-list',(req, res) => {
@@ -65,15 +79,30 @@ router.put('/new-list',(req, res) => {
   updateUser()
 })
 
+//Delete a item and remove it from the user
+router.delete('/delete-item/:userId/:itemId',(req, res) => {
+  const userItemID = req.params.itemId
+  Item.findOneAndDelete({_id: req.params.itemId}).then(itemDelete => {
+      res.json(itemDelete)
+  })
+
+  User.findOne({_id: req.params.userId}).then((userRemoveItemRef, i, arr) => {
+      var n = userRemoveItemRef.indexOf(userItemID)
+      userRemoveItemRef.items.splice(n,1)   
+      userRemoveItemRef.save() 
+      console.log(userRemoveItemRef)
+  })
+})
+
 //Delete a list and remove it from the user
 router.delete('/delete-list/:userId/:listId',(req, res) => {
-  const userID = req.params.listId
+  const userListID = req.params.listId
   List.findOneAndDelete({_id: req.params.listId}).then(listDelete => {
       res.json(listDelete)
   })
 
   User.findOne({_id: req.params.userId}).then((userRemoveListRef, i, arr) => {
-      var n = userRemoveListRef.indexOf(userID)
+      var n = userRemoveListRef.indexOf(userListID)
       userRemoveListRef.lists.splice(n,1)   
       userRemoveListRef.save() 
       console.log(userRemoveListRef)
@@ -106,21 +135,6 @@ router.put('/new-item',(req, res) => {
       })    
   }
   updateUser()
-})
-
-//Delete a item and remove it from the user
-router.delete('/delete-item/:userId/:itemId',(req, res) => {
-  const userID = req.params.itemId
-  List.findOneAndDelete({_id: req.params.itemId}).then(itemDelete => {
-      res.json(itemDelete)
-  })
-
-  User.findOne({_id: req.params.userId}).then((userRemoveItemRef, i, arr) => {
-      var n = userRemoveItemRef.indexOf(userID)
-      userRemoveItemRef.items.splice(n,1)   
-      userRemoveItemRef.save() 
-      console.log(userRemoveItemRef)
-  })
 })
 
 
