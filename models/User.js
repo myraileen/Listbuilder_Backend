@@ -7,6 +7,12 @@ const UserSchema = new mongoose.Schema({
   last_name: String,
   email_address: String,
   photo_url: String,
+  items: [
+      {
+          ref:"Item",
+          type: mongoose.SchemaTypes.ObjectId
+      }
+  ],
   lists: [
       { 
           ref:"List",

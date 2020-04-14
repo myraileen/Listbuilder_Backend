@@ -3,10 +3,12 @@ const express = require("express")
 const router = express.Router()
 const User = require('../models/User')
 const List = require('../models/List')
+const Item = require('../models/Item')
 
 // GET ALL USERS
 router.get('/users', (req, res) => {
     User.find({})
+    .populate('items')
     .populate('lists')
     .then(users => res.json(users))
   })	
@@ -34,8 +36,6 @@ router.delete('/users/:id', (req, res) => {
     User.findByIdAndDelete(req.params.id)
     .then(deletedUser => res.json(deletedUser))
   })
-
-module.exports = router
 
 // Add a new list and attach it to the user
 router.put('/new-list',(req, res) => {
@@ -79,3 +79,49 @@ router.delete('/delete-list/:userId/:listId',(req, res) => {
       console.log(userRemoveListRef)
   })
 })
+
+// Add a new item and attach it to the user UPDATE
+router.put('/new-item',(req, res) => {
+  console.log(req)
+  console.log('req params', req.params.userId)
+
+  const userID = req.body.user._id
+  let newItem = {}
+
+      function populateItem() {
+      Item.create(
+          req.body.item
+      ).then(item => {
+          newItem = item
+          console.log(newItem)
+          res.json(newItem)
+      })
+  }
+  async function updateUser() {
+      await populateItem()
+      User.findOne({_id: userID}).then(updatedUser => {
+          updatedUser.items.push(newItem._id)
+          updatedUser.save()
+              console.log('user', updatedUser) 
+      })    
+  }
+  updateUser()
+})
+
+//Delete a item and remove it from the user
+router.delete('/delete-item/:userId/:itemId',(req, res) => {
+  const userID = req.params.itemId
+  List.findOneAndDelete({_id: req.params.itemId}).then(itemDelete => {
+      res.json(itemDelete)
+  })
+
+  User.findOne({_id: req.params.userId}).then((userRemoveItemRef, i, arr) => {
+      var n = eventRemoveItemRef.indexOf(userID)
+      userRemoveItemRef.items.splice(n,1)   
+      userRemoveItemRef.save() 
+      console.log(userRemoveItemRef)
+  })
+})
+
+
+module.exports = router
