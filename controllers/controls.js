@@ -114,24 +114,29 @@ router.delete('/delete-list/:userId/:listId',(req, res) => {
   List.findOneAndDelete({_id: req.params.listId}).then(listDelete => {
       res.json(listDelete)
   })
-
   User.findOne({_id: req.params.userId}).then((userRemoveListRef, i, arr) => {
+      console.log(userRemoveListRef)
       var n = userRemoveListRef.indexOf(userListID)
       userRemoveListRef.lists.splice(n,1)   
       userRemoveListRef.save() 
-      console.log(userRemoveListRef)
   })
 })
 
-//Remove an item from a list (but do not delete item from user's items)
+// Remove an item from a list (but do not delete item from user's items)
+// TypeError: Cannot read property 'indexOf' of null
+// possible workaround: update item, status to HIDE a item user wants to 'delete'
 router.put('/remove-list-item/:listId/:itemId',(req, res) => {
   const itemId = req.params.itemId
-
+  console.log(req.params.listId)
+  console.log( itemId )
   List.findOne({_id: req.params.listId}).then((userRemoveItemRef, i, arr) => {
+      console.log(userRemoveItemRef)
       var n = userRemoveItemRef.indexOf(itemId)
+      console.log(n)
       userRemoveItemRef.items.splice(n,1)   
       userRemoveItemRef.save() 
-      console.log(userRemoveItemRef)
+      // console.log(n)
+      res.json('done')
   })
 })
 
@@ -194,13 +199,12 @@ router.put('/new-list-item',(req, res) => {
 router.put('/add-list-item',(req, res) => {
   const listId = req.body.list._id
   const itemId = req.body.item._id
-// this 'hangs' in postman... but transaction works...
-// possibly the connection is hanging open?????
   function updateList() {
       List.findOne({_id: listId})
         .then(updatedList => {
           updatedList.items.push(itemId)
           updatedList.save()
+          res.json(itemId)
       })    
   }
   updateList()

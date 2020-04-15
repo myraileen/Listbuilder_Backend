@@ -19,5 +19,5 @@ Link to [ERD](https://dbdiagram.io/d/5e924af039d18f5553fd74eb)
 
 ## Installation Requirements
 ```
-$ npm install express mongoose cors
+$ npm install express mongoose cors httpie
 ```
