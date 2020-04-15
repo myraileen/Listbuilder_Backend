@@ -2,6 +2,7 @@ const mongoose = require('../db/connection');
 
 const UserSchema = new mongoose.Schema({
   user_id: String,
+  pwd: String,
   status: String,
   first_name: String,
   last_name: String,
