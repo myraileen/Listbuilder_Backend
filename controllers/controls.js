@@ -5,8 +5,8 @@ const User = require('../models/User')
 const List = require('../models/List')
 const Item = require('../models/Item')
 
-// GET ALL USERS
-router.get('/users', (req, res) => {
+// GET ALL USERS (at root)
+router.get('/', (req, res) => {
     User.find({})
     .populate('items')
     .populate ({
@@ -17,30 +17,30 @@ router.get('/users', (req, res) => {
   })	
 
 // GET USER BY ID	
-router.get('/users/:id', (req, res) => {
-    User.findById(req.params.id)
-    .populate('items')
-    .populate ({
-        path: 'lists',
-        populate: { path: 'items' }
-      })
-    .then(user => res.json(user))
-  })
+// router.get('/:id', (req, res) => {
+//     User.findById(req.params.id)
+//     .populate('items')
+//     .populate ({
+//         path: 'lists',
+//         populate: { path: 'items' }
+//       })
+//     .then(user => res.json(user))
+//   })
 
 // CREATE A USER
-router.post('/users/', (req, res) => {
+router.post('/', (req, res) => {
     User.create(req.body)
     .then(newUser => res.json(newUser))
   })
 
 // UPDATE A USER	
-router.put('/users/:id', (req, res) => {
+router.put('/:id', (req, res) => {
     User.findByIdAndUpdate(req.params.id, req.body, {new: true})
       .then(updatedUser => res.json(updatedUser))
   })
 
 // DELETE A USER BY ID
-router.delete('/users/:id', (req, res) => {
+router.delete('/:id', (req, res) => {
     User.findByIdAndDelete(req.params.id)
     .then(deletedUser => res.json(deletedUser))
   })
@@ -209,5 +209,20 @@ router.put('/add-list-item',(req, res) => {
   }
   updateList()
 })
+
+// GET USER DATA BY EMAIL ADDRESS
+router.post('/users', (req, res) => {
+  var email = (req.body.email)
+  function findUser() {
+    User.findOne({email_address: email})
+      .then(user => { 
+        res.json(user)
+      })
+   }
+   findUser()
+})	
+
+
+
 
 module.exports = router
