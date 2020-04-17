@@ -215,12 +215,97 @@ router.post('/users', (req, res) => {
   var email = (req.body.email)
   function findUser() {
     User.findOne({email_address: email})
-      .then(user => { 
-        res.json(user)
+    .populate('items')
+    .populate ({
+        path: 'lists',
+        populate: { path: 'items' }
       })
+      .then(user => { res.json(user)})
    }
    findUser()
 })	
+
+
+// router.post("/users", (req, res) => {
+//   var modelDoc = new User({
+//     user_id: req.body.email,
+//     email_address: req.body.email,
+//   });
+
+//   User.findOneAndUpdate(
+//     {
+//       user_id: req.body.email,
+//       email_address: req.body.email,
+//     }, // find a document with that filter
+//     modelDoc, // document to insert when nothing was found
+//     { upsert: true, new: true, runValidators: true }, // options
+//     function (err, doc) {
+//       // callback
+//       if (err) {
+//         // handle error
+//       } else {
+//         // handle document
+//       }
+//     }
+//   );
+// });
+
+// router.post("/users", (req, res) => {
+//   var modelDoc = new User({
+//     user_id: req.body.email,
+//     email_address: req.body.email
+//   });
+
+//   User.findOneAndUpdate(
+//     {
+//       user_id: req.body.email,
+//       email_address: req.body.email
+//     }, // find a document with that filter
+//     modelDoc, // document to insert when nothing was found
+//     { upsert: true, new: true, runValidators: true }, // options
+//     function (err, doc) {
+//       // callback
+//       if (err) {
+//         // handle error
+//       } else {
+//         // handle document
+//       }
+//     }
+//   );
+// });
+
+// passport.use(new WindowsStrategy({
+//   ldap: {
+//       url: 'ldap://<server>',
+//       base: '<dc>',
+//       bindDN: '<user>',
+//       bindCredentials: '<password>'
+//   },
+//   integrated: false
+// }, function(profile, done) {
+//   User.findOne({ '_id': profile.id }, function (err, user) {
+//       if(err) return done(err);
+
+//       if(user) {
+//           console.log('User: ' + profile._json.sAMAccountName + ' logged in!');
+//           done(null, user);
+//       } else if (profile._json.memberOf.indexOf('<CN of specific group allowed to log in>') != -1) {
+//           var newUser = new User();
+//           newUser._id = profile.id;
+//           newUser.username = profile._json.sAMAccountName;
+//           newUser.familyName = profile.name.familyName;
+//           newUser.givenName = profile.name.givenName;
+
+//           newUser.save(function(err) {
+//               if(err) throw err;
+//               console.log('New User: ' + newUser.username + ' created and logged in!');
+//               done(null, newUser);
+//           });
+//       } else {
+//           done(null, null);
+//       }
+//   });
+// }));
 
 
 
