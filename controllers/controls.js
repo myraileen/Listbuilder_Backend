@@ -28,23 +28,24 @@ router.get("/:id", (req, res) => {
 });
 
 // CREATE A USER
-router.post("/", (req, res) => {
-  User.create(req.body).then((newUser) => res.json(newUser));
-});
+// router.post("/", (req, res) => {
+//   User.create(req.body).then((newUser) => res.json(newUser));
+// });
 
 // UPDATE A USER
-router.put("/:id", (req, res) => {
-  User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-  }).then((updatedUser) => res.json(updatedUser));
-});
+// this broke new-list route when we removed the /user path
+// router.put("/:id", (req, res) => {
+//   User.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//   }).then((updatedUser) => res.json(updatedUser));
+// });
 
 // DELETE A USER BY ID
-router.delete("/:id", (req, res) => {
-  User.findByIdAndDelete(req.params.id).then((deletedUser) =>
-    res.json(deletedUser)
-  );
-});
+// router.delete("/:id", (req, res) => {
+//   User.findByIdAndDelete(req.params.id).then((deletedUser) =>
+//     res.json(deletedUser)
+//   );
+// });
 
 // GET ALL LISTS
 router.get("/lists", (req, res) => {
@@ -68,30 +69,26 @@ router.put("/lists/:id", (req, res) => {
 });
 
 // Add a new list and attach it to the user
-router.put("/new-list", (req, res) => {
-  console.log(req);
-  console.log("req params", req.params.userId);
-
-  const userID = req.body.user._id;
-  let newList = {};
-
-  function populateList() {
-    List.create(req.body.list).then((list) => {
-      newList = list;
-      console.log(newList);
-      res.json(newList);
-    });
+router.put('/new-list',(req, res) => {
+  const userID = req.body.user._id
+  let newList = {}
+      function populateList() {
+      List.create(
+          req.body.list
+      ).then(list => {
+          newList = list
+          res.json(newList)
+      })
   }
   async function updateUser() {
-    await populateList();
-    User.findOne({ _id: userID }).then((updatedUser) => {
-      updatedUser.lists.push(newList._id);
-      updatedUser.save();
-      console.log("user", updatedUser);
-    });
+      await populateList()
+      User.findOne({_id: userID}).then(updatedUser => {
+          updatedUser.lists.push(newList._id)
+          updatedUser.save()
+      })    
   }
-  updateUser();
-});
+  updateUser()
+})
 
 //Delete a item and remove it from the user
 router.delete("/delete-item/:userId/:itemId", (req, res) => {
@@ -205,20 +202,6 @@ router.put("/add-list-item", (req, res) => {
   updateList();
 });
 
-// GET USER DATA BY EMAIL ADDRESS
-// router.post('/users', (req, res) => {
-//   var email = (req.body.email)
-//   function findUser() {
-//     User.findOne({email_address: email})
-//     .populate('items')
-//     .populate ({
-//         path: 'lists',
-//         populate: { path: 'items' }
-//       })
-//       .then(user => { res.json(user)})
-//    }
-//    findUser()
-// })
 
 router.post("/users", (req, res) => {
   var modelDoc = new User({
@@ -249,62 +232,5 @@ router.post("/users", (req, res) => {
     }
   );
 });
-
-// router.post("/users", (req, res) => {
-//   var modelDoc = new User({
-//     user_id: req.body.email,
-//     email_address: req.body.email
-//   });
-
-//   User.findOneAndUpdate(
-//     {
-//       user_id: req.body.email,
-//       email_address: req.body.email
-//     }, // find a document with that filter
-//     modelDoc, // document to insert when nothing was found
-//     { upsert: true, new: true, runValidators: true }, // options
-//     function (err, doc) {
-//       // callback
-//       if (err) {
-//         // handle error
-//       } else {
-//         // handle document
-//       }
-//     }
-//   );
-// });
-
-// passport.use(new WindowsStrategy({
-//   ldap: {
-//       url: 'ldap://<server>',
-//       base: '<dc>',
-//       bindDN: '<user>',
-//       bindCredentials: '<password>'
-//   },
-//   integrated: false
-// }, function(profile, done) {
-//   User.findOne({ '_id': profile.id }, function (err, user) {
-//       if(err) return done(err);
-
-//       if(user) {
-//           console.log('User: ' + profile._json.sAMAccountName + ' logged in!');
-//           done(null, user);
-//       } else if (profile._json.memberOf.indexOf('<CN of specific group allowed to log in>') != -1) {
-//           var newUser = new User();
-//           newUser._id = profile.id;
-//           newUser.username = profile._json.sAMAccountName;
-//           newUser.familyName = profile.name.familyName;
-//           newUser.givenName = profile.name.givenName;
-
-//           newUser.save(function(err) {
-//               if(err) throw err;
-//               console.log('New User: ' + newUser.username + ' created and logged in!');
-//               done(null, newUser);
-//           });
-//       } else {
-//           done(null, null);
-//       }
-//   });
-// }));
 
 module.exports = router;
