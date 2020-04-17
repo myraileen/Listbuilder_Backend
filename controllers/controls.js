@@ -41,11 +41,11 @@ router.get("/:id", (req, res) => {
 // });
 
 // DELETE A USER BY ID
-// router.delete("/:id", (req, res) => {
-//   User.findByIdAndDelete(req.params.id).then((deletedUser) =>
-//     res.json(deletedUser)
-//   );
-// });
+router.delete("/:id", (req, res) => {
+  User.findByIdAndDelete(req.params.id).then((deletedUser) =>
+    res.json(deletedUser)
+  );
+});
 
 // GET ALL LISTS
 router.get("/lists", (req, res) => {
