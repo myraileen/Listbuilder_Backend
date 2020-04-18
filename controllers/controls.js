@@ -13,7 +13,7 @@ router.get("/", (req, res) => {
       path: "lists",
       populate: { path: "items" },
     })
-    .then((users) => res.json(users));
+    .then((users) => res.json([users]));
 });
 
 // GET USER BY ID
