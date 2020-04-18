@@ -68,6 +68,13 @@ router.put("/lists/:id", (req, res) => {
   }).then((updatedList) => res.json(updatedList));
 });
 
+// UPDATE A ITEM
+router.put("/items/:id", (req, res) => {
+  Item.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+  }).then((updatedList) => res.json(updatedList));
+});
+
 // Add a new list and attach it to the user
 router.put('/new-list',(req, res) => {
   const userID = req.body.user._id
