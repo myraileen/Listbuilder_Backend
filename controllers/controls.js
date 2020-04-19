@@ -27,19 +27,6 @@ router.get("/:id", (req, res) => {
     .then((user) => res.json([user]));
 });
 
-// CREATE A USER
-// router.post("/", (req, res) => {
-//   User.create(req.body).then((newUser) => res.json(newUser));
-// });
-
-// UPDATE A USER
-// this broke new-list route when we removed the /user path
-// router.put("/:id", (req, res) => {
-//   User.findByIdAndUpdate(req.params.id, req.body, {
-//     new: true,
-//   }).then((updatedUser) => res.json(updatedUser));
-// });
-
 // DELETE A USER BY ID
 router.delete("/:id", (req, res) => {
   User.findByIdAndDelete(req.params.id).then((deletedUser) =>
@@ -76,26 +63,24 @@ router.put("/items/:id", (req, res) => {
 });
 
 // Add a new list and attach it to the user
-router.put('/new-list',(req, res) => {
-  const userID = req.body.user._id
-  let newList = {}
-      function populateList() {
-      List.create(
-          req.body.list
-      ).then(list => {
-          newList = list
-          res.json(newList)
-      })
+router.put("/new-list", (req, res) => {
+  const userID = req.body.user._id;
+  let newList = {};
+  function populateList() {
+    List.create(req.body.list).then((list) => {
+      newList = list;
+      res.json(newList);
+    });
   }
   async function updateUser() {
-      await populateList()
-      User.findOne({_id: userID}).then(updatedUser => {
-          updatedUser.lists.push(newList._id)
-          updatedUser.save()
-      })    
+    await populateList();
+    User.findOne({ _id: userID }).then((updatedUser) => {
+      updatedUser.lists.push(newList._id);
+      updatedUser.save();
+    });
   }
-  updateUser()
-})
+  updateUser();
+});
 
 //Delete a item and remove it from the user
 router.delete("/delete-item/:userId/:itemId", (req, res) => {
@@ -119,7 +104,6 @@ router.delete("/delete-list/:userId/:listId", (req, res) => {
     res.json(listDelete);
   });
   User.findOne({ _id: req.params.userId }).then((userRemoveListRef, i, arr) => {
-    console.log(userRemoveListRef);
     var n = userRemoveListRef.indexOf(userListID);
     userRemoveListRef.lists.splice(n, 1);
     userRemoveListRef.save();
@@ -127,20 +111,16 @@ router.delete("/delete-list/:userId/:listId", (req, res) => {
 });
 
 // Remove an item from a list (but do not delete item from user's items)
-// TypeError: Cannot read property 'indexOf' of null
-// possible workaround: update item, status to HIDE a item user wants to 'delete'
 router.put("/remove-list-item/:listId/:itemId", (req, res) => {
-  const itemId = req.params.itemId;
   console.log(req.params.listId);
-  console.log(itemId);
-  List.findOne({ _id: req.params.listId }).then((userRemoveItemRef, i, arr) => {
-    console.log(userRemoveItemRef);
-    var n = userRemoveItemRef.indexOf(itemId);
-    console.log(n);
-    userRemoveItemRef.items.splice(n, 1);
-    userRemoveItemRef.save();
-    // console.log(n)
-    res.json("done");
+  console.log(req.params.itemId);
+  List.findOne({ _id: req.params.listId }).then((listItemRef, i, arr) => {
+    // console.log(listItemRef);
+    var n = listItemRef.items.indexOf(req.params.itemId,0);
+    console.log(typeof(n));
+    listItemRef.items.splice(n, 1);
+    listItemRef.save();
+    res.json(listItemRef)
   });
 });
 
@@ -208,7 +188,6 @@ router.put("/add-list-item", (req, res) => {
   }
   updateList();
 });
-
 
 router.post("/users", (req, res) => {
   var modelDoc = new User({
