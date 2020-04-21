@@ -1,6 +1,6 @@
 # List Builder Backend
 ## Overview
-The listbuilder app REACT frontend integrates with a Node.js/Express/Mongoose backend.
+The __**[listbuilder app REACT frontend](https://github.com/dvorakkarrie/list-builder-app)**__ integrates with a Node.js/Express/Mongoose backend.
 
 ## Repo & Deployment links
 * __**[Node/Express/Mongodb github Repository](https://github.com/myraileen/listbuilder_backend)**__
