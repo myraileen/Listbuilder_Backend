@@ -6,8 +6,7 @@ The __**[listbuilder app REACT frontend](https://github.com/dvorakkarrie/list-bu
 * __**[Node/Express/Mongodb github Repository](https://github.com/myraileen/listbuilder_backend)**__
 * __**[Backend Heroku deployment](https://listbuilder-backend.herokuapp.com/)**__
 
-Note: prior to implementing the node/express/mongo backend, we considered implementing a django/postgres backend and one was built but not fully flushed out and used as there was concern for cors/communicating with the frontend. JWT token implementation was researched but did not have time to implement in either. Linked here is the django/postgres backend repo: 
-* __**[django/mongodb backend](https://github.com/myraileen/List_Builder_Backend)**__
+Note: prior to implementing the node/express/mongo backend, we considered implementing a django/postgres backend and one was built but not fully flushed out and used as there was concern for cors/communicating with the frontend. JWT token implementation was researched but did not have time to implement in either. Linked here is the django/postgres backend repo: __**[django/mongodb backend repo](https://github.com/myraileen/List_Builder_Backend)**__
 
 ---
 
