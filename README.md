@@ -30,7 +30,7 @@ Note: prior to implementing the node/express/mongo backend, we considered implem
 
 ## Developer Notes
 
-(I learned the async/await method with the node/express/mongo project... amoung many, many other 'things'.)
+(I learned the async/await method with the node/express/mongo project... among many, many other 'things'.)
 
 ---
 
