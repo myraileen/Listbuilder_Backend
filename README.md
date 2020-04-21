@@ -3,7 +3,7 @@
 The listbuilder app REACT frontend will integrate with this Node.js/Express/Mongoose backend.
 
 ## Data Models
-Link to [ERD](https://dbdiagram.io/d/5e924af039d18f5553fd74eb)
+![ERD](https://res.cloudinary.com/myraileen/image/upload/v1583796279/giphydog_xfhscg.gif)
 
 ## API routes
 | Path | Transaction |
