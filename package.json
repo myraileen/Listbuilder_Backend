@@ -20,7 +20,7 @@
   "homepage": "https://github.com/myraileen/listbuilder_backend#readme",
   "dependencies": {
     "cors": "^2.8.5",
-    "express": "^4.17.1",
+    "express": "^4.18.2",
     "httpie": "^1.1.2",
     "mongoose": "^5.9.9"
   }
